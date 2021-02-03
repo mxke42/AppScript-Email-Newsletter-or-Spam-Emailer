@@ -1,0 +1,25 @@
+//email newsletter using only google products.
+//converts a google drive file to pdf and sends to list of subscriber emails stored in a google sheets doc
+
+function sendNewsletter() {
+
+//grab powerpoint (converted to PDF later)
+var file = DriveApp.getFileById('google drive file id');
+
+//get list of emails from spreadsheet 'SubscriberList' (must be active spreadsheet)
+var subscriberSheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = subscriberSheet.getSheets()[0];
+var emails = sheet.getSheetValues(1,1,100,1);
+Logger.log(emails) //print subscriber list
+
+//start sending emails
+var x = 0;
+for (x; x < emails.length; x++) {
+  var email = emails[x][0];
+  Logger.log(email) //print email address when email is sent
+
+  MailApp.sendEmail(email, 'subject', 'email text', {
+    name: 'Newsletter',
+    attachments: [file.getAs(MimeType.PDF)]
+  });
+}}
